@@ -2,8 +2,12 @@ package com.project.project.controllers;
 
 import com.project.project.model.Contact;
 import com.project.project.service.ContactService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -19,14 +23,20 @@ public class ContactController {
     }
 
     @RequestMapping("/contact")
-    public String displayContactPage() {
+    public String displayContactPage(Model model) {
+        model.addAttribute("theContact", new Contact());
         return "contact.html";
     }
 
     @RequestMapping(value = "/saveMsg", method = POST)
-    public ModelAndView saveMessage(Contact contact) {
+    public String saveMessage(@Valid @ModelAttribute("theContact") Contact contact, Errors error) {
+        if (error.hasErrors()) {
+            System.out.println("COntact form validation error" + error.toString());
+            return "contact.html";
+        }
         contactService.saveMessageDetails(contact);
-        return new ModelAndView("redirect:/contact");
+
+        return "redirect:/contact";
 
 
     }

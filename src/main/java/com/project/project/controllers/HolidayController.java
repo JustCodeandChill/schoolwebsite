@@ -5,7 +5,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Arrays;
@@ -14,10 +16,21 @@ import java.util.stream.Collectors;
 
 @Controller
 public class HolidayController {
-    @RequestMapping("/holiday")
+//    @RequestMapping("/holiday")
+@RequestMapping(value = "/holiday/{display}", method = RequestMethod.GET)
     public String displayHoliday(Model model,
+                                 @PathVariable String display,
                                  @RequestParam(required = false) boolean festival,
                                  @RequestParam(required = false) boolean federal) {
+        if (display != null && display.equals("all") ) {
+            model.addAttribute("festival", true);
+            model.addAttribute("federal", true);
+        } else  if (display != null && display.equals("federal")) {
+            model.addAttribute("federal", true);
+        } else if (display != null && display.equals("festival")) {
+            model.addAttribute("festival", true);
+        }
+
         List<Holiday> holidays = Arrays.asList(
                 new Holiday(" Jan 1 ","New Year's Day", Holiday.Type.FESTIVAL),
                 new Holiday(" Oct 31 ","Halloween", Holiday.Type.FESTIVAL),
@@ -37,8 +50,7 @@ public class HolidayController {
 
         }
 
-        model.addAttribute("festivalFlag", festival);
-        model.addAttribute("federalFlag", federal);
+
         System.out.println(model);
         return "holidays.html";
     }
