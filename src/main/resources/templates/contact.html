@@ -48,7 +48,7 @@ Author URL: http://w3layouts.com
                     <ul>
                         <li class="alert alert-danger" role="alert" th:each="error: ${#fields.errors('theContact.*')}" th:text="${error}"></li>
                     </ul>
-                    <form th:action="@{/saveMsg}" method="post" class="signin-form" th:object="${theContact}">
+                    <form action="/ezschool/saveMsg" method="post" class="signin-form" th:object="${theContact}">
                         <div class="input-grids">
                             <div class="row">
                                 <div class="col-sm-6">
