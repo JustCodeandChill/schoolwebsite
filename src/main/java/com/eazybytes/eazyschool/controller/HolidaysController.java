@@ -1,7 +1,8 @@
 package com.eazybytes.eazyschool.controller;
 
 import com.eazybytes.eazyschool.model.Holiday;
-import com.eazybytes.eazyschool.repository.HolidayRepository;
+//import com.eazybytes.eazyschool.repository.HolidayRepository;
+import com.eazybytes.eazyschool.repository2.HolidayRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 @Slf4j
 @Controller
@@ -44,7 +47,10 @@ public class HolidaysController {
 //                new Holiday(" Sep 5 ","Labor Day", Holiday.Type.FEDERAL),
 //                new Holiday(" Nov 11 ","Veterans Day", Holiday.Type.FEDERAL)
 //        );
-        List<Holiday> holidays = holidayRepository.findAllHolidays();
+//        List<Holiday> holidays = holidayRepository.findAllHolidays();
+        Iterable<Holiday> holidaysRetrieved = holidayRepository.findAll();
+        List<Holiday> holidays = StreamSupport.stream(holidaysRetrieved.spliterator(), false).collect(Collectors.toList());
+
         Holiday.Type[] types = Holiday.Type.values();
         for (Holiday.Type type : types) {
             model.addAttribute(type.toString(),
